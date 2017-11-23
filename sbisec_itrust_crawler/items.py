@@ -1,0 +1,245 @@
+# vim:set fileencoding=utf-8, fileformat=unix
+#
+
+import re
+
+from scrapy import Field, Item
+from scrapy.loader import ItemLoader
+from scrapy.loader.processors import Identity, Join, MapCompose, TakeFirst
+
+
+class InvestmentTrust(Item):
+    """
+    投資信託商品の情報を保持するクラスです。
+    """
+
+    協会コード = Field()
+    投資信託名 = Field()
+    愛称 = Field()
+
+    純資産 = Field()
+    設定来高値 = Field()
+    設定来安値 = Field()
+
+    委託会社 = Field()
+    モーニングスターカテゴリ = Field()
+    運用方針 = Field()
+    ベンチマーク = Field()
+    商品分類 = Field()
+    買付手数料_ネット_金額指定 = Field()
+    買付手数料_ネット_NISA預かり = Field()
+    買付手数料_ネット_口数指定 = Field()
+    買付手数料_対面_金額指定 = Field()
+    買付手数料_対面_NISA預かり = Field()
+    買付手数料_対面_口数指定 = Field()
+    信託報酬年率 = Field()
+    信託財産留保額 = Field()
+    解約手数料 = Field()
+    約定日 = Field()
+    受渡日 = Field()
+    決算日 = Field()
+    決算頻度 = Field()
+    注文申込締切時間 = Field()
+    休場日 = Field()
+    買付単位_金額 = Field()
+    買付単位_口数 = Field()
+    買付単位_積立 = Field()
+    売却単位_金額 = Field()
+    売却単位_口数 = Field()
+    当初一口当たり元本 = Field()
+    分配金受取方法_金額 = Field()
+    分配金受取方法_口数 = Field()
+    償還優遇の適用 = Field()
+    設定日 = Field()
+    償還日 = Field()
+    基準価額推移_1_日付 = Field()
+    基準価額推移_1_価額 = Field()
+    基準価額推移_2_日付 = Field()
+    基準価額推移_2_価額 = Field()
+    基準価額推移_3_日付 = Field()
+    基準価額推移_3_価額 = Field()
+    基準価額推移_4_日付 = Field()
+    基準価額推移_4_価額 = Field()
+    基準価額推移_5_日付 = Field()
+    基準価額推移_5_価額 = Field()
+    分配金実績_1_決算日 = Field()
+    分配金実績_1_分配金 = Field()
+    分配金実績_2_決算日 = Field()
+    分配金実績_2_分配金 = Field()
+    分配金実績_3_決算日 = Field()
+    分配金実績_3_分配金 = Field()
+    分配金実績_4_決算日 = Field()
+    分配金実績_4_分配金 = Field()
+    分配金実績_5_決算日 = Field()
+    分配金実績_5_分配金 = Field()
+    基準価額騰落率_前日比 = Field()
+    基準価額騰落率_1週間 = Field()
+    基準価額騰落率_1カ月 = Field()
+    基準価額騰落率_3カ月 = Field()
+    基準価額騰落率_6カ月 = Field()
+    基準価額騰落率_1年 = Field()
+    基準価額騰落率_3年 = Field()
+    基準価額騰落率_5年 = Field()
+    基準価額騰落率_10年 = Field()
+    基準価額騰落率_設定来 = Field()
+    トータルリターン_1ヵ月 = Field()
+    トータルリターン_6ヵ月 = Field()
+    トータルリターン_1年 = Field()
+    トータルリターン_3年 = Field()
+    トータルリターン_5年 = Field()
+    トータルリターン_設定来 = Field()
+    トータルリターン_平均_1ヵ月 = Field()
+    トータルリターン_平均_6ヵ月 = Field()
+    トータルリターン_平均_1年 = Field()
+    トータルリターン_平均_3年 = Field()
+    トータルリターン_平均_5年 = Field()
+    トータルリターン_平均_設定来 = Field()
+
+    ランキング_週間販売金額 = Field()
+    ランキング_週間販売件数 = Field()
+    ランキング_積立設定金額 = Field()
+    ランキング_積立設定件数 = Field()
+    ランキング_NISA販売金額 = Field()
+    ランキング_銘柄注目度 = Field()
+    ランキング_トータルリターン = Field()
+    ランキング_分配金利回り = Field()
+    ランキング_騰落率上位 = Field()
+    ランキング_純資産増加率 = Field()
+    ランキング_資金連続流入 = Field()
+
+    純資産推移_前日比 = Field()
+    純資産推移_1週間 = Field()
+    純資産推移_1カ月 = Field()
+    純資産推移_3カ月 = Field()
+    純資産推移_6カ月 = Field()
+    純資産推移_1年 = Field()
+    純資産推移_3年 = Field()
+    純資産推移_5年 = Field()
+    純資産推移_10年 = Field()
+    純資産推移_設定来 = Field()
+
+    レーティング_MSレーティング_総合 = Field()
+    レーティング_MSレーティング_3年 = Field()
+    レーティング_MSレーティング_5年 = Field()
+    レーティング_MSレーティング_10年 = Field()
+
+    リスクメジャー_3年 = Field()
+    リスクメジャー_5年 = Field()
+    リスクメジャー_10年 = Field()
+    リスクメジャー_総合 = Field()
+
+    シャープレシオ_1年 = Field()
+    シャープレシオ_3年 = Field()
+    シャープレシオ_5年 = Field()
+    シャープレシオ_10年 = Field()
+    シャープレシオ_平均_1年 = Field()
+    シャープレシオ_平均_3年 = Field()
+    シャープレシオ_平均_5年 = Field()
+    シャープレシオ_平均_10年 = Field()
+
+    標準偏差_1年 = Field()
+    標準偏差_3年 = Field()
+    標準偏差_5年 = Field()
+    標準偏差_10年 = Field()
+    標準偏差_平均_1年 = Field()
+    標準偏差_平均_3年 = Field()
+    標準偏差_平均_5年 = Field()
+    標準偏差_平均_10年 = Field()
+
+
+class InvestmentTrustItemLoader(ItemLoader):
+
+    # 各プロセッサの組み合わせ要素となるサブプロセッサ
+    def _Proc空白除去(s):
+        return s.strip()
+
+    def _Proc漢数字変換(s):
+        return s.replace('百', '00').\
+            replace('千', '000').replace('万', '0000').replace('円', '')
+
+    def _Proc数値型化(s):
+        return None if s == '' else\
+            int(s) if s.find('.') < 0 else\
+            float(s)
+
+    def _Procカンマ除去(s):
+        return s.replace(',', '')
+
+    def _Proc先頭プラス除去(s):
+        return s.lstrip('+')
+
+    # 各Fieldに対するプロセッサ
+    default_input_processor = MapCompose(_Proc空白除去)
+    default_output_processor = TakeFirst()
+
+    純資産_in = MapCompose(_Proc空白除去, _Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    設定来安値_in =\
+        MapCompose(_Proc空白除去, _Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    設定来高値_in =\
+        MapCompose(_Proc空白除去, _Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+
+    # FIXME 以下、setattr() を用いて、動的に設定したほうがベター。
+
+    分配金実績_1_分配金_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    分配金実績_2_分配金_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    分配金実績_3_分配金_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    分配金実績_4_分配金_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    分配金実績_5_分配金_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    基準価額推移_1_価額_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    基準価額推移_2_価額_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    基準価額推移_3_価額_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    基準価額推移_4_価額_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    基準価額推移_5_価額_in = MapCompose(_Proc漢数字変換, _Procカンマ除去, _Proc数値型化)
+    純資産推移_前日比_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_1週間_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_1カ月_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_3カ月_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_6カ月_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_1年_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_3年_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_5年_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_10年_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    純資産推移_設定来_in = MapCompose(_Procカンマ除去, _Proc数値型化)
+    シャープレシオ_1年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_3年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_5年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_10年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_平均_1年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_平均_3年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_平均_5年_in = MapCompose(_Proc数値型化)
+    シャープレシオ_平均_10年_in = MapCompose(_Proc数値型化)
+    トータルリターン_1ヵ月_in = MapCompose(_Proc数値型化)
+    トータルリターン_6ヵ月_in = MapCompose(_Proc数値型化)
+    トータルリターン_1年_in = MapCompose(_Proc数値型化)
+    トータルリターン_3年_in = MapCompose(_Proc数値型化)
+    トータルリターン_5年_in = MapCompose(_Proc数値型化)
+    トータルリターン_設定来_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_1ヵ月_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_6ヵ月_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_1年_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_3年_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_5年_in = MapCompose(_Proc数値型化)
+    トータルリターン_平均_設定来_in = MapCompose(_Proc数値型化)
+    レーティング_MSレーティング_総合_in = MapCompose(_Proc数値型化)
+    レーティング_MSレーティング_3年_in = MapCompose(_Proc数値型化)
+    レーティング_MSレーティング_5年_in = MapCompose(_Proc数値型化)
+    レーティング_MSレーティング_10年_in = MapCompose(_Proc数値型化)
+    標準偏差_1年_in = MapCompose(_Proc数値型化)
+    標準偏差_3年_in = MapCompose(_Proc数値型化)
+    標準偏差_5年_in = MapCompose(_Proc数値型化)
+    標準偏差_10年_in = MapCompose(_Proc数値型化)
+    標準偏差_平均_1年_in = MapCompose(_Proc数値型化)
+    標準偏差_平均_3年_in = MapCompose(_Proc数値型化)
+    標準偏差_平均_5年_in = MapCompose(_Proc数値型化)
+    標準偏差_平均_10年_in = MapCompose(_Proc数値型化)
+    ランキング_週間販売金額_in = MapCompose(_Proc数値型化)
+    ランキング_週間販売件数_in = MapCompose(_Proc数値型化)
+    ランキング_積立設定金額_in = MapCompose(_Proc数値型化)
+    ランキング_積立設定件数_in = MapCompose(_Proc数値型化)
+    ランキング_NISA販売金額_in = MapCompose(_Proc数値型化)
+    ランキング_銘柄注目度_in = MapCompose(_Proc数値型化)
+    ランキング_トータルリターン_in = MapCompose(_Proc数値型化)
+    ランキング_分配金利回り_in = MapCompose(_Proc数値型化)
+    ランキング_騰落率上位_in = MapCompose(_Proc数値型化)
+    ランキング_純資産増加率_in = MapCompose(_Proc数値型化)
+    ランキング_資金連続流入_in = MapCompose(_Proc数値型化)
